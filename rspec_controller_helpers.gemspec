@@ -10,4 +10,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/dkniffin/rspec_controller_helpers'
   s.license     = 'MIT'
   s.add_runtime_dependency 'rspec-rails'
+  s.add_runtime_dependency 'factory_girl_rails'
 end
