@@ -9,6 +9,6 @@ Gem::Specification.new do |s|
   s.files       = ["lib/rspec_controller_helpers.rb"]
   s.homepage    = 'https://github.com/dkniffin/rspec_controller_helpers'
   s.license     = 'MIT'
-  s.add_runtime_dependency 'rspec-rails', '~> 0'
-  s.add_runtime_dependency 'factory_girl_rails', '~> 0'
+  s.add_runtime_dependency 'rspec-rails', '~> 3.0'
+  s.add_runtime_dependency 'factory_girl_rails', '~> 4.0'
 end
