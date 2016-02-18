@@ -10,7 +10,7 @@ shared_examples_for 'a resourceful controller' do |model, raw_options|
   end
 
   describe "GET /<resource>" do
-    let(:objects) { create_list(factory, 3) }
+    let!(:objects) { create_list(factory, 3) }
     subject { get :index }
 
     it "renders the index page" do
