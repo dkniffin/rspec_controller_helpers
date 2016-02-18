@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'rspec_controller_helpers'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2016-02-18'
   s.summary     = "Rails controller test helpers"
   s.description = "A few bits and pieces to make testing controllers easier"
