@@ -3,7 +3,7 @@
 Add the following to your Gemfile, under the `test` group
 
 ````ruby
-gem 'rspec_controller_helpers', github: 'dkniffin/rspec_controller_helpers'
+gem 'rspec_controller_helpers'
 ````
 
 # Usage
