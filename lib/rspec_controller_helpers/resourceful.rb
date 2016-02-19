@@ -1,4 +1,4 @@
-shared_examples_for 'a resourceful controller' do |model, raw_options|
+RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
   let(:options) { raw_options || {} }
   let(:symbol) { options[:symbol] || model.name.downcase.to_sym }
   let(:factory) { options[:factory] || symbol }

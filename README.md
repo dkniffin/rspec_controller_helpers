@@ -3,7 +3,13 @@
 Add the following to your Gemfile, under the `test` group
 
 ````ruby
-gem 'rspec_controller_helpers'
+gem 'rspec_controller_helpers', require: false
+````
+
+And add the following in the top of your `spec_helper.rb`:
+
+````ruby
+require 'rspec_controller_helpers'
 ````
 
 # Usage
