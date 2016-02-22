@@ -49,3 +49,18 @@ This shared example will also infer your factory name from your model, so if you
 ````ruby
 it_behaves_like 'a resourceful controller', User, factory: :admin
 ````
+
+### JSON
+
+By default, the shared example assumes html format for all views, but you can override that for each view, to test json endpoints:
+
+````ruby
+it_behaves_like 'a resourceful controller', User, endpoint_formats: { index: :json }
+````
+
+That will test the following:
+
+| Controller Method | request      | Tests |
+|-------------------|-----------|-------|
+| `index`           | `GET /<resource>` | The right number of objects is returned |
+| `show`            | `GET /<resource>/:id` | The correct attributes are returned |
