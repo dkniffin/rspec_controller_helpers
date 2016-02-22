@@ -1,3 +1,5 @@
+![](http://ruby-gem-downloads-badge.herokuapp.com/rspec_controller_helpers)
+
 # Installation
 
 Add the following to your Gemfile, under the `test` group
