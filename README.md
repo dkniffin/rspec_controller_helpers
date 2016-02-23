@@ -1,5 +1,6 @@
 ![](https://badge.fury.io/rb/rspec_controller_helpers.svg)
 ![](http://ruby-gem-downloads-badge.herokuapp.com/rspec_controller_helpers)
+![](https://img.shields.io/badge/license-MIT-blue.svg)
 
 # Installation
 
