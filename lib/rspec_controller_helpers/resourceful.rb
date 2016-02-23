@@ -1,19 +1,21 @@
 RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
-  let(:options) { ({ endpoint_formats: {} }).merge(raw_options) }
-  let(:symbol) { options[:symbol] || model.name.downcase.to_sym }
-  let(:factory) { options[:factory] || symbol }
-
-  let(:endpoints_to_test) do
-    all = [:index, :new, :create, :show, :edit, :update, :delete]
-    except = options[:except] || []
-    options[:only] || (all - except)
+  let(:default_options) do
+    {
+      only: [:index, :new, :create, :show, :edit, :update, :delete],
+      except: [],
+      formats: {} # They all default to :html
+    }
   end
+  let(:options) { default_options.merge(raw_options) }
+  let(:model_name) { options[:model_name] || model.name.downcase.to_sym }
+  let(:factory) { options[:factory] || model_name }
+  let(:endpoints) { options[:only] - options[:except] }
 
-  let(:endpoint_formats) do
-    endpoints_to_test
-      .map{|t| { t => :html } }
+  let(:formats) do
+    endpoints
+      .map { |t| { t => [:html] } }
       .reduce(:merge)
-      .merge(options[:endpoint_formats])
+      .merge(options[:formats])
   end
 
   let(:json_response) { JSON.parse(response.body) }
@@ -23,19 +25,19 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
     subject { get :index }
 
     it 'is successful' do
-      if endpoints_to_test.include? :index
+      if endpoints.include? :index
         subject
         expect(response).to have_http_status(:ok)
       end
     end
 
     it "renders the index page" do
-      if endpoints_to_test.include? :index
+      if endpoints.include? :index
         subject
-        case endpoint_formats[:index]
-        when :html
+        if formats[:index].include? :html
           expect(response).to render_template(:index)
-        when :json
+        end
+        if formats[:index].include? :json
           expect(json_response.length).to eq(3)
         end
       end
@@ -46,17 +48,16 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
     subject { get :new }
 
     it 'is successful' do
-      if endpoints_to_test.include? :new
+      if endpoints.include? :new
         subject
         expect(response).to have_http_status(:ok)
       end
     end
 
     it "renders the new page" do
-      if endpoints_to_test.include? :new
+      if endpoints.include? :new
         subject
-        case endpoint_formats[:new]
-        when :html
+        if formats[:new].include? :html
           expect(response).to render_template(:new)
         end
       end
@@ -65,10 +66,10 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
 
   describe "POST /<resource>" do
     let(:attributes) { attributes_for(factory) }
-    subject { post :create, symbol => attributes }
+    subject { post :create, model_name => attributes }
 
     it "creates a new object" do
-      if endpoints_to_test.include? :create
+      if endpoints.include? :create
         expect { subject }.to change { model.count }.by(1)
       end
     end
@@ -79,21 +80,21 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
     subject { get :show, id: object.id }
 
     it 'is successful' do
-      if endpoints_to_test.include? :show
+      if endpoints.include? :show
         subject
         expect(response).to have_http_status(:ok)
       end
     end
 
     it "renders the show page" do
-      if endpoints_to_test.include? :show
+      if endpoints.include? :show
         subject
-        case endpoint_formats[:show]
-        when :html
+        if formats[:show].include? :html
           expect(response).to render_template(:show)
-        when :json
-          # object.to_json
-          attributes = attributes_for(factory).map{ |k, _| [k, object.send(k)] }.to_h
+        end
+        if formats[:show].include? :json
+          desired_attributes = attributes_for(factory).keys
+          attributes = object.attributes.select { |k, _| desired_attributes.include?(k) }
           expect(json_response).to eq(attributes)
         end
       end
@@ -105,17 +106,16 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
     subject { get :edit, id: object.id }
 
     it 'is successful' do
-      if endpoints_to_test.include? :edit
+      if endpoints.include? :edit
         subject
         expect(response).to have_http_status(:ok)
       end
     end
 
     it "renders the edit page" do
-      if endpoints_to_test.include? :edit
+      if endpoints.include? :edit
         subject
-        case endpoint_formats[:edit]
-        when :html
+        if formats[:edit].include? :html
           expect(response).to render_template(:edit)
         end
       end
@@ -125,10 +125,10 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
   describe "PATCH /<resource>/:id" do
     let(:object) { create(factory) }
     let(:new_attributes) { attributes_for(factory) }
-    subject { patch :update, id: object.id, symbol => new_attributes }
+    subject { patch :update, id: object.id, model_name => new_attributes }
 
     it "updates the object" do
-      if endpoints_to_test.include? :update
+      if endpoints.include? :update
         subject
         object.reload
         new_attributes.each do |k, v|
@@ -143,7 +143,7 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
     subject { delete :destroy, id: object.id }
 
     it "deletes the object" do
-      if endpoints_to_test.include? :destroy
+      if endpoints.include? :destroy
         expect { subject }.to change { model.count }.by(-1)
       end
     end
