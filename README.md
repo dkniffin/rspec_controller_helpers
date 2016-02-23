@@ -55,7 +55,7 @@ it_behaves_like 'a resourceful controller', User, factory: :admin
 By default, the shared example assumes html format for all views, but you can override that for each view, to test json endpoints:
 
 ````ruby
-it_behaves_like 'a resourceful controller', User, endpoint_formats: { index: :json }
+it_behaves_like 'a resourceful controller', User, formats: { index: [:html, :json] }
 ````
 
 That will test the following:
