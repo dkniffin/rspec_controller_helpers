@@ -69,7 +69,7 @@ That will test the following:
 | `index`           | `GET /<resource>` | The right number of objects is returned |
 | `show`            | `GET /<resource>/:id` | The correct attributes are returned |
 
-You can also provide the json key value if you're data is nested under that controller name:
+You can also provide the json key value if your data is nested under that controller name:
 
 ````ruby
 it_behaves_like 'a resourceful controller', User, formats: { index: [:html, :json] }, json_key: :users
