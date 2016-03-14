@@ -10,6 +10,7 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
   let(:model_name) { options[:model_name] || model.name.downcase.to_sym }
   let(:factory) { options[:factory] || model_name }
   let(:endpoints) { options[:only] - options[:except] }
+  let(:json_option) { options[:json_key] }
 
   let(:formats) do
     endpoints
@@ -18,7 +19,13 @@ RSpec.shared_examples_for 'a resourceful controller' do |model, raw_options|
       .merge(options[:formats])
   end
 
-  let(:json_response) { JSON.parse(response.body) }
+  let(:json_response) do
+    if json_option.nil?
+      JSON.parse(response.body)
+    else
+      JSON.parse(response.body)[json_option.to_s].first
+    end
+  end
 
   describe "GET /<resource>" do
     let!(:objects) { create_list(factory, 3) }
